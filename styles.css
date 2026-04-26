@@ -5,15 +5,18 @@
   box-sizing: border-box;
 }
 
-/* Fondo general */
+
 body {
   font-family: 'Sora', sans-serif;
   background: linear-gradient(135deg, #f5f7fa, #e4ecf7);
   min-height: 100vh;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
+  padding-top: 60px;
+
 }
+
 
 /* Contenedor principal */
 main {
@@ -24,7 +27,7 @@ main {
 
 /* Título */
 h1 {
-  font-size: 2.8rem;
+  font-size: 3.5rem;
   margin-bottom: 30px;
   font-family: 'Sora', sans-serif;
   letter-spacing: 1px;
@@ -32,34 +35,48 @@ h1 {
 
 /* Controles */
 .controls {
-  margin-bottom: 40px;
+  margin-bottom: 80px;
 }
 
 /* Select */
 select {
   padding: 8px 12px;
-  border-radius: 10px;
+  border-radius: 8px;
   border: none;
-  margin-left: 10px;
+  margin-left: 12px;
 }
 
 /* Botón */
 button {
   margin-top: 20px;
-  padding: 12px 24px;
+  margin-bottom: 20px;
+  padding: 10px 20px;
   border: none;
-  border-radius: 25px;
-  background: #333;
-  color: white;
+  border-radius: 30px;
+  background: rgb(255, 255, 255);
+  color: rgb(34, 34, 34);
   font-size: 1rem;
+  font-weight: light;
+  font-family: 'Sora', sans-serif;
   cursor: pointer;
   transition: 0.3s ease;
+
+  box-shadow: 0 6px 0 rgb(161, 161, 161),
+              0 6px 10px rgba(0, 0, 0, 0.4);
 }
 
 button:hover {
-  background: #555;
-  transform: scale(1.05);
+  transform: translateY(2px);
+  box-shadow: 0 6px 0 rgb(100, 100, 100),
+              0 6px 15px rgba(0, 0, 0, 0.2);
 }
+
+button:active {
+  transform: translateY(6px);
+  box-shadow: 0 0px 0 rgb(100, 100, 100),
+              0 3px 8px rgba(0, 0, 0, 0.3);
+}
+
 
 /* Paleta */
 #palette {
@@ -71,15 +88,15 @@ button:hover {
 
 /* Círculos de color */
 .color-box {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%; /* círculo perfecto */
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
   padding: 10px;
-  font-size: 0.8rem;
+  font-size: 0.6rem;
   font-weight: bold;
   box-shadow: 0 8px 20px rgba(0,0,0,0.15);
   transition: transform 0.2s ease;
@@ -87,5 +104,5 @@ button:hover {
 
 /* Hover bonito */
 .color-box:hover {
-  transform: scale(1.1);
+  transform: scale(1.3);
 }
