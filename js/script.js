@@ -39,8 +39,11 @@ function hslAHex(color) {
 }
 
 function suavizarColor(color) {
-  const valores = color.match(/\d+/g);
+  const valoresInvalidos = !valores || valores.length < 3;
 
+  if (valoresInvalidos) {
+    return color;
+}
   let h = valores[0];
   let s = Math.max(20, valores[1] * 0.8);
   let l = Math.min(90, valores[2] * 1.7);
@@ -88,11 +91,12 @@ function generarPaleta() {
     const color = generarColorHSL();
     const hex = hslAHex(color);
     const tipoFormato = formato.value;
-    let textMostrar;
 
-    if (tipoFormato === "hex") {
+    let textMostrar;
+      if (tipoFormato === "hex") {
       textMostrar = hex;
-    } else {
+    } 
+    else {
       textMostrar = color;
     }
     colores.push(color);
@@ -119,8 +123,8 @@ function generarPaleta() {
           }, 250);
         });
     palette.appendChild(div);
-       actualizarFondo(colores);
   }
+  actualizarFondo(colores);
 
 
 function actualizarFondo(colores) {
@@ -142,6 +146,5 @@ function actualizarFondo(colores) {
     radial-gradient(circle at 80% 80%, ${c4}, transparent 50%),
     #f5f7fa
   `;
-  }
-    
+  } 
 }
