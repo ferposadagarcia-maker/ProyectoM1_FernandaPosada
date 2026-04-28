@@ -66,6 +66,7 @@ function generarPaleta() {
       textMostrar = color;
     }
 
+    
     colores.push(color);
 
     const l = parseInt(color.split(",")[2]);
