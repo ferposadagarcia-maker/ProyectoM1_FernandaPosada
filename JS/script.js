@@ -1,6 +1,7 @@
 const btn = document.getElementById("btn");
 const palette = document.getElementById("palette");
 const colorCount = document.getElementById("colorCount");
+const formato = document.getElementById("formato");
 
 btn.addEventListener("click", generarPaleta);
 
@@ -36,27 +37,77 @@ function hslAHex(color) {
 
   return hex
 }
+
+function suavizarColor(color) {
+  const valores = color.match(/\d+/g);
+
+  let h = valores[0];
+  let s = Math.max(20, valores[1] * 0.8);
+  let l = Math.min(90, valores[2] * 1.7);
+
+  return `hsla(${h}, ${s}%, ${l}%, 0.35)`;
+}
+
 function generarPaleta() {
   palette.innerHTML = "";
 
   const cantidad = colorCount.value;
+  const colores = [];
 
   for (let i = 0; i < cantidad; i++) {
     const color = generarColorHSL();
     const hex = hslAHex(color);
+    const tipoFormato = formato.value;
+    let textMostrar;
+
+    if (tipoFormato === "hex") {
+      textMostrar = hex;
+    } else {
+      textMostrar = color;
+    }
+
+    colores.push(color);
 
     const l = parseInt(color.split(",")[2]);
     const textColor = l > 50 ? "black" : "white";
-
 
     const div = document.createElement("div");
         div.classList.add("color-box");
         div.style.backgroundColor = color;
         div.style.color = textColor;
-        div.textContent = color + "\n" + hex;
+        div.textContent = textMostrar;
+
         div.addEventListener("click", function() {
          navigator.clipboard.writeText(color + " " + hex);
+
+         div.classList.add("copiado");
+
+         setTimeout(() => {
+          div.classList.remove("copiado");
+          }, 500);
         });
     palette.appendChild(div);
   }
+    actualizarFondo(colores);
+function actualizarFondo(colores) {
+  const seleccion = colores.slice(0, 4);
+
+  while (seleccion.length < 4) {
+    seleccion.push(seleccion[0]);
+  }
+
+  const c1 = suavizarColor(seleccion[0]);
+  const c2 = suavizarColor(seleccion[1]);
+  const c3 = suavizarColor(seleccion[2]);
+  const c4 = suavizarColor(seleccion[3]);
+
+  document.body.style.background = `
+    radial-gradient(circle at 20% 30%, ${c1}, transparent 50%),
+    radial-gradient(circle at 80% 20%, ${c2}, transparent 50%),
+    radial-gradient(circle at 20% 80%, ${c3}, transparent 50%),
+    radial-gradient(circle at 80% 80%, ${c4}, transparent 50%),
+    #f5f7fa
+  `;
+  }
+    
 }
