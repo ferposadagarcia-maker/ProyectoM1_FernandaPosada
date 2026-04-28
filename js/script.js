@@ -48,11 +48,41 @@ function suavizarColor(color) {
   return `hsla(${h}, ${s}%, ${l}%, 0.35)`;
 }
 
+function copiarAlPortapapeles(texto) {
+  navigator.clipboard.writeText(texto);
+  mostrarMensaje("Copiado al portapapeles");
+}
+
+function mostrarMensaje(texto) {
+  const msg = document.createElement("div");
+  msg.textContent = texto;
+
+  msg.style.position = "fixed";
+  msg.style.bottom = "20px";
+  msg.style.left = "50%";
+  msg.style.transform = "translateX(-50%)";
+  msg.style.background = "#111";
+  msg.style.color = "#fff";
+  msg.style.padding = "10px 20px";
+  msg.style.borderRadius = "20px";
+  msg.style.fontSize = "14px";
+  msg.style.zIndex = "9999";
+
+  document.body.appendChild(msg);
+
+  setTimeout(() => msg.remove(), 1500);
+}
+
 function generarPaleta() {
   palette.innerHTML = "";
-
-  const cantidad = colorCount.value;
+  
   const colores = [];
+  const cantidad = parseInt(colorCount.value);
+
+  if (!cantidad || cantidad === 0) {
+    mostrarMensaje("Selecciona la cantidad de colores");
+    return;
+  }
 
   for (let i = 0; i < cantidad; i++) {
     const color = generarColorHSL();
@@ -65,8 +95,6 @@ function generarPaleta() {
     } else {
       textMostrar = color;
     }
-
-    
     colores.push(color);
 
     const l = parseInt(color.split(",")[2]);
@@ -76,20 +104,25 @@ function generarPaleta() {
         div.classList.add("color-box");
         div.style.backgroundColor = color;
         div.style.color = textColor;
-        div.textContent = textMostrar;
+
+    const texto = document.createElement("span");
+    texto.textContent = textMostrar;
+    div.appendChild(texto);
 
         div.addEventListener("click", function() {
-         navigator.clipboard.writeText(color + " " + hex);
+          const textoCopiar = (tipoFormato === "hex") ? hex : color;
+          copiarAlPortapapeles(textoCopiar);
+          texto.classList.add("copy-pop");
 
-         div.classList.add("copiado");
-
-         setTimeout(() => {
-          div.classList.remove("copiado");
-          }, 500);
+          setTimeout(() => {
+            texto.classList.remove("copy-pop")
+          }, 250);
         });
     palette.appendChild(div);
+       actualizarFondo(colores);
   }
-    actualizarFondo(colores);
+
+
 function actualizarFondo(colores) {
   const seleccion = colores.slice(0, 4);
 
