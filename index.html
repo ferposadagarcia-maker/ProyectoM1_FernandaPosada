@@ -3,30 +3,40 @@
 <head>
   <meta charset="UTF-8">
   <title>Generador de Paletas</title>
-  <link rel="stylesheet" href="styles.css">
-  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
   <main>
 
-    <h1>Palettify</h1>
+    <h1>Colorfly Studio</h1>
+      <h2>Palette</h2>
+        <h3>Generador de Colores</h3>
 
-    <section class="controls">
+        <br>
+        <p>Crea paletas de colores aleatorios</p>
+
+    <div class="controls">
       <button id="btn">Generar Paleta</button>
 
-      <label>
-        <br>
-        <br>
-        Cantidad de colores:
+      <div class="grupo">
+        <span>Cantidad de colores</span>
         <select id="colorCount">
           <option value="6">6</option>
           <option value="8">8</option>
           <option value="9">9</option>
-
         </select>
-      </label>
-    </section>
+      </div>  
+        
+      <div class="grupo">
+        <span>Formato:</span>
+        <select id="formato">
+          <option value="HSL">HSL</option>
+          <option value="HEX">HEX</option>
+        </select>
+      </div>
+    </div>
 
     <section id="palette">
         <br>
@@ -35,6 +45,6 @@
 
   </main>
 
-  <script src="script.js"></script>
+  <script src="js/script.js"></script>
 </body>
 </html>
