@@ -112,9 +112,10 @@ function generarPaleta() {
   }
   actualizarFondo(colores);
     const mensaje = document.getElementById("mensajefinal");
-    mensaje.style.display = "block";
+      if (mensaje) {
+      mensaje.style.display = "block";
+    }
 }
-
 function actualizarFondo(colores) {
   const seleccion = colores.slice(0, 4);
 
