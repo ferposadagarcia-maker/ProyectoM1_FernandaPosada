@@ -111,6 +111,8 @@ function generarPaleta() {
       palette.appendChild(div);
   }
   actualizarFondo(colores);
+    const mensaje = document.getElementById("mensajeFinal");
+    mensaje.style.display = "block";
 }
 
 function actualizarFondo(colores) {
