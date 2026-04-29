@@ -4,6 +4,8 @@ const colorCount = document.getElementById("colorCount");
 const formato = document.getElementById("formato");
 
 btn.addEventListener("click", generarPaleta);
+formato.addEventListener("change", actualizarTodosLosTextos);
+
 
 function generarColorHSL() {
   const h = Math.floor(Math.random() * 360) ;
@@ -16,11 +18,9 @@ function generarColorHSL() {
 function hslAHex(color) {
   const div = document.createElement("div");
   div.style.color = color;
-
   document.body.appendChild(div);
 
   const rgb = getComputedStyle(div).color;
-
   document.body.removeChild(div);
 
   const valores = rgb.match(/\d+/g).map(Number);
@@ -39,9 +39,9 @@ function hslAHex(color) {
 }
 
 function suavizarColor(color) {
-  const valoresInvalidos = !valores || valores.length < 3;
+  const valores = color.match(/\d+/g);
 
-  if (valoresInvalidos) {
+  if (!valores || valores.length < 3) {
     return color;
 }
   let h = valores[0];
@@ -51,29 +51,17 @@ function suavizarColor(color) {
   return `hsla(${h}, ${s}%, ${l}%, 0.35)`;
 }
 
-function copiarAlPortapapeles(texto) {
-  navigator.clipboard.writeText(texto);
-  mostrarMensaje("Copiado al portapapeles");
+function actualizarTextoBox(box){
+  const span = box.querySelector ("span");
+  const hsl = box.dataset.hsl;
+  const hex = box.dataset.hex;
+
+  span.textContent = formato.value === "hex" ? hex : hsl;
 }
 
-function mostrarMensaje(texto) {
-  const msg = document.createElement("div");
-  msg.textContent = texto;
-
-  msg.style.position = "fixed";
-  msg.style.bottom = "20px";
-  msg.style.left = "50%";
-  msg.style.transform = "translateX(-50%)";
-  msg.style.background = "#111";
-  msg.style.color = "#fff";
-  msg.style.padding = "10px 20px";
-  msg.style.borderRadius = "20px";
-  msg.style.fontSize = "14px";
-  msg.style.zIndex = "9999";
-
-  document.body.appendChild(msg);
-
-  setTimeout(() => msg.remove(), 1500);
+function actualizarTodosLosTextos() {
+  const boxes = document.querySelectorAll(".color-box");
+  boxes.forEach(actualizarTextoBox);
 }
 
 function generarPaleta() {
@@ -81,7 +69,7 @@ function generarPaleta() {
   
   const colores = [];
   const cantidad = parseInt(colorCount.value);
-
+  
   if (!cantidad || cantidad === 0) {
     mostrarMensaje("Selecciona la cantidad de colores");
     return;
@@ -92,40 +80,38 @@ function generarPaleta() {
     const hex = hslAHex(color);
     const tipoFormato = formato.value;
 
-    let textMostrar;
-      if (tipoFormato === "hex") {
-      textMostrar = hex;
-    } 
-    else {
-      textMostrar = color;
-    }
+    let textMostrar = (tipoFormato === "hex") ? hex : color;
+   
     colores.push(color);
 
     const l = parseInt(color.split(",")[2]);
     const textColor = l > 50 ? "black" : "white";
 
     const div = document.createElement("div");
-        div.classList.add("color-box");
-        div.style.backgroundColor = color;
-        div.style.color = textColor;
+      div.classList.add("color-box");
+      div.style.backgroundColor = color;
+      div.style.color = textColor;
+
+      div.dataset.hsl = color;
+      div.dataset.hex = hex;
 
     const texto = document.createElement("span");
-    texto.textContent = textMostrar;
-    div.appendChild(texto);
+      texto.textContent = textMostrar;
+      div.appendChild(texto); 
 
-        div.addEventListener("click", function() {
-          const textoCopiar = (tipoFormato === "hex") ? hex : color;
-          copiarAlPortapapeles(textoCopiar);
-          texto.classList.add("copy-pop");
-
-          setTimeout(() => {
-            texto.classList.remove("copy-pop")
-          }, 250);
-        });
-    palette.appendChild(div);
+    div.addEventListener("click", function() {
+      const textoCopiar = (tipoFormato === "hex") ? hex : color;
+      copiarAlPortapapeles(textoCopiar);
+      
+    texto.classList.add("copy-pop");
+    setTimeout(() => {
+      texto.classList.remove("copy-pop")
+    }, 250);
+    });
+      palette.appendChild(div);
   }
   actualizarFondo(colores);
-
+}
 
 function actualizarFondo(colores) {
   const seleccion = colores.slice(0, 4);
@@ -133,11 +119,7 @@ function actualizarFondo(colores) {
   while (seleccion.length < 4) {
     seleccion.push(seleccion[0]);
   }
-
-  const c1 = suavizarColor(seleccion[0]);
-  const c2 = suavizarColor(seleccion[1]);
-  const c3 = suavizarColor(seleccion[2]);
-  const c4 = suavizarColor(seleccion[3]);
+  const [c1, c2, c3, c4] = seleccion.map (suavizarColor);
 
   document.body.style.background = `
     radial-gradient(circle at 20% 30%, ${c1}, transparent 50%),
@@ -147,4 +129,29 @@ function actualizarFondo(colores) {
     #f5f7fa
   `;
   } 
+
+function copiarAlPortapapeles(texto) {
+  navigator.clipboard.writeText(texto);
+  mostrarMensaje("Copiado al portapapeles");
+}
+
+function mostrarMensaje(texto) {
+  const msg = document.createElement("div");
+  msg.textContent = texto;
+
+  Object.assign(msg.style, {
+    position: "fixed",
+    bottom: "20px",
+    left: "50%",
+    transform: "translateX(-50%)",
+    background: "#111",
+    color: "#fff",
+    padding: "10px 20px",
+    borderRadius: "20px",
+    fontSize: "14px",
+    zIndex: "9999",
+  });
+
+  document.body.appendChild(msg);
+  setTimeout(() => msg.remove(), 1500);
 }
